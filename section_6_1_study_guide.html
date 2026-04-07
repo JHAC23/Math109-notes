@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAT 109 | Section 6.1 – Higher-Degree Polynomial Functions</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d0d0f;
+    --bg2:       #131316;
+    --bg3:       #1a1a1f;
+    --red:       #e8213a;
+    --red-dim:   #9b1628;
+    --red-glow:  rgba(232,33,58,0.18);
+    --red-glow2: rgba(232,33,58,0.08);
+    --amber:     #f5a623;
+    --teal:      #38d9c0;
+    --text:      #eceaf0;
+    --muted:     #7a7888;
+    --border:    rgba(232,33,58,0.22);
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Outfit', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    padding: 64px 48px 52px;
+    background: linear-gradient(135deg, #15000a 0%, #0d0d0f 60%, #0a0014 100%);
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 80% at 20% 50%, rgba(232,33,58,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    background: var(--red-glow2);
+    border: 1px solid var(--border);
+    padding: 4px 14px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  .hero h1 span { color: var(--red); }
+  .hero-sub {
+    margin-top: 14px;
+    font-size: 1rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 520px;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 28px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .hero-badge::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 1px;
+    background: var(--red-dim);
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+  }
+
+  /* ── TABLE OF CONTENTS ── */
+  .toc {
+    margin: 44px 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+  }
+  .toc-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 18px;
+  }
+  .toc-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 32px;
+  }
+  .toc-list li a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .toc-list li a:hover { color: var(--text); }
+  .toc-list li a .toc-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--red-dim);
+    min-width: 22px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 52px 0 36px;
+  }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red-dim);
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-header {
+    margin-bottom: 24px;
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .section-header h2 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── BODY TEXT ── */
+  p { color: #b8b6c4; margin-bottom: 14px; font-size: 0.97rem; }
+  p strong { color: var(--text); font-weight: 600; }
+
+  /* ── GLOW BOX ── */
+  .glow-box {
+    background: var(--bg3);
+    border-left: 3px solid var(--red);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 20px 0;
+    box-shadow: inset 0 0 40px var(--red-glow2), 0 0 0 1px rgba(255,255,255,0.03);
+  }
+  .glow-box.amber { border-left-color: var(--amber); }
+  .glow-box.teal  { border-left-color: var(--teal); }
+  .glow-box .box-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 8px;
+    display: block;
+  }
+  .glow-box.amber .box-label { color: var(--amber); }
+  .glow-box.teal  .box-label { color: var(--teal); }
+  .glow-box p { margin-bottom: 6px; }
+  .glow-box p:last-child { margin-bottom: 0; }
+
+  /* ── FORMULA PILL ── */
+  .formula {
+    display: inline-block;
+    font-family: var(--mono);
+    background: rgba(232,33,58,0.1);
+    border: 1px solid var(--border);
+    color: #f7a8b4;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 0.93rem;
+  }
+
+  /* ── WORKED EXAMPLE TABLE ── */
+  .example-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 24px 0;
+    overflow: hidden;
+  }
+  .example-header {
+    background: linear-gradient(90deg, rgba(232,33,58,0.15) 0%, transparent 100%);
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .example-header .ex-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .example-header .ex-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .example-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .example-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 18px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .example-table td {
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    color: #b8b6c4;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .example-table tr:last-child td { border-bottom: none; }
+  .example-table td:first-child {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    width: 110px;
+    text-transform: uppercase;
+  }
+  .example-table td:nth-child(2) {
+    font-family: var(--mono);
+    color: #f7a8b4;
+    font-size: 0.88rem;
+    width: 200px;
+  }
+  .example-table td:nth-child(3) { color: #9e9baa; font-style: italic; }
+  .example-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ── RULES GRID ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+  .rule-card {
+    background: var(--bg3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .rule-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    opacity: 0.6;
+  }
+  .rule-card.amber::before { background: var(--amber); }
+  .rule-card.teal::before  { background: var(--teal); }
+  .rule-card .rc-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .rule-card .rc-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .rule-card p { font-size: 0.88rem; margin-bottom: 0; }
+
+  /* ── LCT TABLE ── */
+  .lct-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .lct-table th {
+    background: rgba(232,33,58,0.12);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--red);
+    padding: 12px 18px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .lct-table td {
+    padding: 13px 18px;
+    font-size: 0.88rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #b8b6c4;
+  }
+  .lct-table tr:last-child td { border-bottom: none; }
+  .lct-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .lct-table td:first-child { font-weight: 600; color: var(--text); width: 130px; }
+  .lct-table td:nth-child(2) { color: var(--amber); font-family: var(--mono); font-size: 0.82rem; }
+  .lct-table td:nth-child(3) { color: #f7a8b4; font-family: var(--mono); font-size: 0.82rem; }
+
+  /* ── PILL ROW ── */
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.85rem;
+    color: #c8c6d4;
+  }
+  .pill .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--red);
+    flex-shrink: 0;
+  }
+  .pill.amber .dot { background: var(--amber); }
+  .pill.teal  .dot { background: var(--teal); }
+
+  /* ── READING ── */
+  ul.clean { list-style: none; padding: 0; margin: 12px 0; }
+  ul.clean li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 7px 0;
+    font-size: 0.92rem;
+    color: #b8b6c4;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  ul.clean li:last-child { border-bottom: none; }
+  ul.clean li::before {
+    content: '—';
+    color: var(--red-dim);
+    font-family: var(--mono);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── SUMMARY TABLE ── */
+  .sum-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px 0;
+    font-size: 0.88rem;
+  }
+  .sum-table th {
+    background: rgba(232,33,58,0.12);
+    color: var(--red);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .sum-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #b8b6c4;
+  }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .sum-table td:first-child { font-weight: 700; color: var(--text); }
+  .sum-table .mono { font-family: var(--mono); color: #f7a8b4; }
+  .sum-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── TIP BOX ── */
+  .tip {
+    display: flex;
+    gap: 16px;
+    background: rgba(245,166,35,0.07);
+    border: 1px solid rgba(245,166,35,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .tip-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tip-body { font-size: 0.9rem; color: #c8c6d4; }
+  .tip-body strong { color: var(--amber); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 40px 0 20px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeUp 0.5s ease both; }
+  .container > * { animation: fadeUp 0.5s ease both; animation-delay: 0.1s; }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-tag">MAT 109 · Greenville Tech · Dr. Jenkins</div>
+  <h1>Higher-Degree<br><span>Polynomial Functions</span></h1>
+  <p class="hero-sub">Section 6.1 — Cubics, quartics, turning points, end behavior, and the Leading Coefficient Test.</p>
+  <div class="hero-badge">Study Guide · Chapter 6</div>
+</div>
+
+<div class="container">
+
+  <!-- ── TABLE OF CONTENTS ── -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <ul class="toc-list">
+      <li><a href="#s1"><span class="toc-num">01</span> What Is a Higher-Degree Polynomial?</a></li>
+      <li><a href="#s2"><span class="toc-num">02</span> Cubics & Quartics</a></li>
+      <li><a href="#s3"><span class="toc-num">03</span> Turning Points & Local Extrema</a></li>
+      <li><a href="#s4"><span class="toc-num">04</span> Absolute vs. Relative Extrema</a></li>
+      <li><a href="#s5"><span class="toc-num">05</span> End Behavior</a></li>
+      <li><a href="#s6"><span class="toc-num">06</span> The Leading Coefficient Test (LCT)</a></li>
+      <li><a href="#s7"><span class="toc-num">07</span> LCT Examples</a></li>
+      <li><a href="#s8"><span class="toc-num">08</span> Reading a Graph — Putting It All Together</a></li>
+      <li><a href="#s9"><span class="toc-num">09</span> Quick-Reference Summary Table</a></li>
+    </ul>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 01</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s1">
+    <span class="section-num">01 · Definition</span>
+    <h2>What Is a Higher-Degree Polynomial?</h2>
+  </div>
+
+  <p>A <strong>polynomial</strong> is an expression built from constants and non-negative integer powers of x combined by addition and subtraction. The <strong>degree</strong> is simply the highest power of x that appears.</p>
+
+  <div class="glow-box">
+    <span class="box-label">Key Definition</span>
+    <p>A <strong>higher-degree polynomial function</strong> is any polynomial whose degree is greater than 2 (i.e., cubic, quartic, or higher).</p>
+    <p>General form: <span class="formula">f(x) = a_n x^n + a_(n-1) x^(n-1) + ... + a_1 x + a_0</span></p>
+  </div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rc-label">Cubic</div>
+      <div class="rc-title">Degree 3</div>
+      <p><span class="formula">ax^3 + bx^2 + cx + d</span><br>where <strong>a ≠ 0</strong></p>
+    </div>
+    <div class="rule-card amber">
+      <div class="rc-label">Quartic</div>
+      <div class="rc-title">Degree 4</div>
+      <p><span class="formula">ax^4 + bx^3 + cx^2 + dx + e</span><br>where <strong>a ≠ 0</strong></p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-icon">⚠️</div>
+    <div class="tip-body"><strong>Watch out:</strong> Polynomials are not always written in descending order. The degree is the highest power of x — not necessarily the first term you see. Example: <span class="formula">5x + 3x^3</span> has degree <strong>3</strong>.</div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 02</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s2">
+    <span class="section-num">02 · Graphs</span>
+    <h2>Cubics &amp; Quartics</h2>
+  </div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rc-label">Cubic — degree 3</div>
+      <div class="rc-title">At most 2 turning points</div>
+      <p>Can have <strong>0 turning points</strong> (always increasing or always decreasing) or <strong>2 turning points</strong> (the classic S/hump shape).</p>
+    </div>
+    <div class="rule-card amber">
+      <div class="rc-label">Quartic — degree 4</div>
+      <div class="rc-title">At most 3 turning points</div>
+      <p>Can have <strong>1 turning point</strong> (parabola-like) or <strong>3 turning points</strong> (W or M shape).</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 03</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s3">
+    <span class="section-num">03 · Turning Points</span>
+    <h2>Turning Points &amp; Local Extrema</h2>
+  </div>
+
+  <p>A <strong>turning point</strong> is where the graph changes direction — from increasing to decreasing, or vice versa. The formal math term is <strong>local (relative) extrema</strong>.</p>
+
+  <div class="rules-grid">
+    <div class="rule-card teal">
+      <div class="rc-label">Local Minimum</div>
+      <div class="rc-title">Decreasing → Increasing</div>
+      <p>The graph goes down, hits the lowest point in that area, then turns and goes back up.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rc-label">Local Maximum</div>
+      <div class="rc-title">Increasing → Decreasing</div>
+      <p>The graph goes up, hits the highest point in that area, then turns and goes back down.</p>
+    </div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-icon">🔑</div>
+    <div class="tip-body"><strong>Slowing down ≠ turning point.</strong> If the graph slows down but never reverses direction, it is NOT a turning point. It must actually change direction.</div>
+  </div>
+
+  <div class="glow-box teal">
+    <span class="box-label">TI-83/84 Calculator Tip</span>
+    <p>Graph the function, then press <span class="formula">2nd → CALC</span> and choose <strong>minimum</strong> or <strong>maximum</strong>. Set a left bound, right bound, and guess — the calculator returns the exact coordinates.</p>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="ex-tag">Example</span>
+      <span class="ex-title">Identify x-intercepts and local extrema from a graph</span>
+    </div>
+    <table class="example-table">
+      <thead>
+        <tr><th>Label</th><th>Expression</th><th>Why</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>x-intercepts (A)</td>
+          <td>x = 0 and x = 3</td>
+          <td>Graph touches/crosses the x-axis at these two values</td>
+        </tr>
+        <tr>
+          <td>Local min (A)</td>
+          <td>(0, 0)</td>
+          <td>Graph decreases to this point, then turns and increases — lowest nearby value</td>
+        </tr>
+        <tr>
+          <td>Local max (A)</td>
+          <td>approx. (2, 8)</td>
+          <td>Graph increases to this point, then turns and decreases — highest nearby value</td>
+        </tr>
+        <tr>
+          <td>x-intercept (B)</td>
+          <td>x = -1</td>
+          <td>Only crossing; graph never turns — always increasing, so no local extrema</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 04</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s4">
+    <span class="section-num">04 · Absolute Extrema</span>
+    <h2>Absolute vs. Relative Extrema</h2>
+  </div>
+
+  <div class="rules-grid">
+    <div class="rule-card">
+      <div class="rc-label">Absolute Maximum</div>
+      <div class="rc-title">Highest y-value on the interval</div>
+      <p>The tallest point over the entire interval being examined. May or may not coincide with a relative maximum.</p>
+    </div>
+    <div class="rule-card amber">
+      <div class="rc-label">Absolute Minimum</div>
+      <div class="rc-title">Lowest y-value on the interval</div>
+      <p>The lowest point over the entire interval. May or may not coincide with a relative minimum.</p>
+    </div>
+  </div>
+
+  <div class="glow-box">
+    <span class="box-label">Important Distinction</span>
+    <p>A relative max/min can also be an absolute max/min — but it doesn't have to be. Always check the <strong>endpoints</strong> of the interval and compare all values.</p>
+    <p>Example from Dr. Jenkins' slides: Relative max at <span class="formula">(-0.408, 0.272)</span>, Relative min at <span class="formula">(0.408, -0.272)</span>. But the absolute max on that interval is the endpoint <span class="formula">(1, 1)</span>, and the absolute min is the relative min <span class="formula">(0.408, -0.272)</span>.</p>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 05</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s5">
+    <span class="section-num">05 · End Behavior</span>
+    <h2>End Behavior</h2>
+  </div>
+
+  <p><strong>End behavior</strong> describes what happens to the graph on the far left (as x → −∞) and the far right (as x → +∞). For each side, the graph is either <strong>rising</strong> (going up) or <strong>falling</strong> (going down).</p>
+
+  <ul class="clean">
+    <li>If the graph goes UP to the left → <strong>Rises left</strong></li>
+    <li>If the graph goes DOWN to the left → <strong>Falls left</strong></li>
+    <li>If the graph goes UP to the right → <strong>Rises right</strong></li>
+    <li>If the graph goes DOWN to the right → <strong>Falls right</strong></li>
+  </ul>
+
+  <div class="tip">
+    <div class="tip-icon">✏️</div>
+    <div class="tip-body"><strong>No graph? No problem.</strong> You can determine end behavior from the equation alone using the <strong>Leading Coefficient Test</strong> in the next section.</div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 06</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s6">
+    <span class="section-num">06 · LCT</span>
+    <h2>The Leading Coefficient Test (LCT)</h2>
+  </div>
+
+  <p>The <strong>leading coefficient</strong> is the number attached to the highest-power x term (not necessarily the first term in the expression).</p>
+
+  <div class="glow-box">
+    <span class="box-label">The Two Questions to Ask</span>
+    <p><strong>1.</strong> Is the degree (n) even or odd?</p>
+    <p><strong>2.</strong> Is the leading coefficient positive or negative?</p>
+  </div>
+
+  <table class="lct-table">
+    <thead>
+      <tr>
+        <th>Degree</th>
+        <th>Positive Leading Coeff.</th>
+        <th>Negative Leading Coeff.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Even (2, 4, 6…)</td>
+        <td>Rises left AND rises right</td>
+        <td>Falls left AND falls right</td>
+      </tr>
+      <tr>
+        <td>Odd (1, 3, 5…)</td>
+        <td>Falls left, rises right</td>
+        <td>Rises left, falls right</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="rules-grid">
+    <div class="rule-card teal">
+      <div class="rc-label">Memory Trick — Even</div>
+      <div class="rc-title">Same direction on both ends</div>
+      <p>Think of x^2 (parabola): both ends go the same way. Positive → both up. Negative → both down.</p>
+    </div>
+    <div class="rule-card">
+      <div class="rc-label">Memory Trick — Odd</div>
+      <div class="rc-title">Opposite directions on each end</div>
+      <p>Think of x^3: the two ends always go in opposite directions. Positive → falls left, rises right.</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 07</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s7">
+    <span class="section-num">07 · LCT Examples</span>
+    <h2>Applying the LCT</h2>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="ex-tag">Example A</span>
+      <span class="ex-title">f(x) = -5x^4 + 3x^3 - 7</span>
+    </div>
+    <table class="example-table">
+      <thead><tr><th>Step</th><th>Find</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Degree</td><td>4 (even)</td><td>Highest power is x^4</td></tr>
+        <tr><td>Leading coeff.</td><td>-5 (negative)</td><td>Attached to x^4</td></tr>
+        <tr><td>End behavior</td><td>Falls left AND falls right</td><td>Even degree + negative coeff. → both ends fall</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="ex-tag">Example B</span>
+      <span class="ex-title">f(x) = 3 + 6x^5 - 7x^2</span>
+    </div>
+    <table class="example-table">
+      <thead><tr><th>Step</th><th>Find</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Degree</td><td>5 (odd)</td><td>Highest power is x^5 (NOT x^2 — look for the highest!)</td></tr>
+        <tr><td>Leading coeff.</td><td>6 (positive)</td><td>Attached to x^5</td></tr>
+        <tr><td>End behavior</td><td>Falls left, rises right</td><td>Odd degree + positive coeff. → opposite directions</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 08</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s8">
+    <span class="section-num">08 · Reading a Graph</span>
+    <h2>Putting It All Together</h2>
+  </div>
+
+  <p>From any graph, you should be able to state five things. Use this checklist for every graph question on tests and homework.</p>
+
+  <div class="pill-row">
+    <div class="pill"><span class="dot"></span>Number of x-intercepts</div>
+    <div class="pill"><span class="dot"></span>Number of turning points</div>
+    <div class="pill amber"><span class="dot"></span>LC positive or negative</div>
+    <div class="pill amber"><span class="dot"></span>Degree even or odd</div>
+    <div class="pill teal"><span class="dot"></span>Minimum possible degree</div>
+  </div>
+
+  <div class="glow-box amber">
+    <span class="box-label">Minimum Possible Degree — How to Find It</span>
+    <p>Turning points ≤ n−1, so: <span class="formula">min degree = (# of turning points) + 1</span></p>
+    <p>BUT also: it must be at least as big as the number of x-intercepts, AND must match the parity (even/odd) determined by end behavior.</p>
+    <p><strong>Take the larger of the two constraints, adjusted for parity.</strong></p>
+  </div>
+
+  <div class="example-block">
+    <div class="example-header">
+      <span class="ex-tag">Examples 1–4</span>
+      <span class="ex-title">Graph Analysis Walkthrough</span>
+    </div>
+    <table class="example-table">
+      <thead><tr><th>Graph</th><th>Key Facts</th><th>Conclusion</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Ex 1</td>
+          <td>2 x-intercepts, 1 turning point, rises both ends</td>
+          <td>Even degree, positive LC, min degree = 2</td>
+        </tr>
+        <tr>
+          <td>Ex 2</td>
+          <td>3 x-intercepts (one just touches), 3 turning points, falls both ends</td>
+          <td>Even degree, negative LC, min degree = 4 (not 3 — needs even degree with 3 turning points → n−1=3 → n=4)</td>
+        </tr>
+        <tr>
+          <td>Ex 3</td>
+          <td>1 x-intercept, 0 turning points, rises left / falls right</td>
+          <td>Odd degree, negative LC, min degree = 3 (not 1 — not a straight line!)</td>
+        </tr>
+        <tr>
+          <td>Ex 4</td>
+          <td>3 x-intercepts, 2 turning points, falls left / rises right</td>
+          <td>Odd degree, positive LC, min degree = 3</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="tip">
+    <div class="tip-icon">📝</div>
+    <div class="tip-body"><strong>Test tip:</strong> For these "putting it all together" problems, show your reasoning step by step — identify end behavior first (to get even/odd and LC sign), then count intercepts and turning points, then determine min degree.</div>
+  </div>
+
+  <!-- ════════════════════════════════════ -->
+  <div class="divider"><div class="divider-line"></div><div class="divider-label">Section 09</div><div class="divider-line"></div></div>
+  <div class="section-header" id="s9">
+    <span class="section-num">09 · Quick Reference</span>
+    <h2>Summary Table</h2>
+  </div>
+
+  <table class="sum-table">
+    <thead>
+      <tr>
+        <th>Function Type</th>
+        <th>Degree</th>
+        <th>Turning Points</th>
+        <th>x-intercepts (max)</th>
+        <th>Degree Parity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Linear</td>
+        <td class="mono">1</td>
+        <td class="mono">0</td>
+        <td class="mono">1</td>
+        <td>Odd</td>
+      </tr>
+      <tr>
+        <td>Quadratic</td>
+        <td class="mono">2</td>
+        <td class="mono">1</td>
+        <td class="mono">2</td>
+        <td>Even</td>
+      </tr>
+      <tr>
+        <td>Cubic</td>
+        <td class="mono">3</td>
+        <td class="mono">0 or 2</td>
+        <td class="mono">3</td>
+        <td>Odd</td>
+      </tr>
+      <tr>
+        <td>Quartic</td>
+        <td class="mono">4</td>
+        <td class="mono">1 or 3</td>
+        <td class="mono">4</td>
+        <td>Even</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="glow-box">
+    <span class="box-label">LCT Quick Reference</span>
+    <p><strong>Even degree + positive LC →</strong> Rises left, rises right (U shape)</p>
+    <p><strong>Even degree + negative LC →</strong> Falls left, falls right (∩ shape)</p>
+    <p><strong>Odd degree + positive LC →</strong> Falls left, rises right (/ shape)</p>
+    <p><strong>Odd degree + negative LC →</strong> Rises left, falls right (\ shape)</p>
+  </div>
+
+  <div class="glow-box amber">
+    <span class="box-label">Key Formulas</span>
+    <p>Max x-intercepts = <span class="formula">n</span> &nbsp;|&nbsp; Max turning points = <span class="formula">n - 1</span></p>
+    <p>Minimum degree = <span class="formula">turning points + 1</span> (adjusted for parity)</p>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">MAT 109 · Section 6.1 · Greenville Tech · Dr. Jenkins</div>
+
+</body>
+</html>
